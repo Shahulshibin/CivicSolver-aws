@@ -26,10 +26,119 @@
 
 <button type="submit">Submit Complaint</button>
 
-</form>
+</form><!DOCTYPE html>
+<html>
+<head>
+
+<title>Submit Complaint</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+body{
+background:linear-gradient(135deg,#0f0f0f,#1a0033);
+color:white;
+}
+
+.form-card{
+background:rgba(255,255,255,0.05);
+padding:30px;
+border-radius:16px;
+width:400px;
+margin:auto;
+margin-top:100px;
+backdrop-filter: blur(12px);
+}
+
+input,textarea{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+background:#1f1f1f;
+border:1px solid #333;
+color:white;
+}
+
+input:focus,textarea:focus{
+outline:none;
+border-color:#a855f7;
+}
+
+button{
+background:#7c3aed;
+padding:12px;
+border-radius:8px;
+width:100%;
+margin-top:15px;
+transition:0.3s;
+}
+
+button:hover{
+background:#a855f7;
+box-shadow:0 0 15px #a855f7;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="form-card">
+
+<h2 class="text-2xl font-bold mb-4 text-center text-violet-400">
+Submit Complaint
+</h2>
+
+<input id="title" placeholder="Complaint Title">
+
+<textarea id="description" placeholder="Describe the issue"></textarea>
+
+<input id="location" placeholder="Location">
+
+<button onclick="submitComplaint()">
+Submit Complaint
+</button>
+
+</div>
+
+<script>
+
+async function submitComplaint(){
+
+const title=document.getElementById("title").value
+const description=document.getElementById("description").value
+const location=document.getElementById("location").value
+
+await fetch("http://localhost:5000/api/complaints",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+title,
+description,
+location
+})
+
+})
+
+alert("Complaint Submitted")
+
+}
+
+</script>
+
 
 <script src="js/submit.js"></script>
 
 
 </body>
 </html>
+
+<
