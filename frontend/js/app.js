@@ -181,3 +181,19 @@ navigator.geolocation.getCurrentPosition(function(position) {
   document.getElementById("location").value = lat + "," + lon;
 
 });
+function detectLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      document.getElementById("location").value = lat + "," + lon;
+
+    }, function(error) {
+      alert("Location access denied or unavailable");
+    });
+  } else {
+    alert("Geolocation not supported");
+  }
+}
