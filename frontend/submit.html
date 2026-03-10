@@ -1,181 +1,35 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
-<title>Report Issue</title>
-
-<link rel="stylesheet" href="css/style.css">
-
+<title>Submit Complaint</title>
 </head>
 
 <body>
 
-<header class="navbar">
+<h2>Submit Complaint</h2>
 
-<div class="logo">CivicTrack</div>
+<form id="complaintForm">
 
-<header class="navbar">
+<label>Title</label><br>
+<input type="text" id="title" required><br><br>
 
+<label>Description</label><br>
+<textarea id="description" required></textarea><br><br>
 
-
-<nav>
-
-<a href="index.html">Home</a>
-<a href="submit.html">Report Issue</a>
-<a href="dashboard.html">Dashboard</a>
-
-<button onclick="toggleMode()" class="mode-toggle">
-🌙
-
-</button>
-
-</nav>
-
-</header>
-
-</header>
-
-
-<div class="form-wrapper">
-
-<div class="form-card">
-
-<h2>Report Civic Issue</h2>
-
-<br>
-
-<label>Issue Title</label>
-<input id="title" placeholder="Example: Broken streetlight">
-
-<br><br>
-
-<label>Description</label>
-<textarea id="description" rows="4"
-placeholder="Describe the problem"></textarea>
-
-<br><br>
-
-<label>Location</label>
-
-<div class="location-row">
-
-<input type="text" id="location" name="location" readonly>
-
+<label>Location</label><br>
+<input type="text" id="location" readonly>
 <button type="button" onclick="detectLocation()">Detect</button>
-
-</div>
-
 <br><br>
 
-<label>Upload Image / Video</label>
-<input type="file" id="file">
+<label>Upload Image / Video</label><br>
+<input type="file" id="file"><br><br>
 
-<br><br>
+<button type="submit">Submit Complaint</button>
 
-<button onclick="submitComplaint()" class="primary-btn submit-btn">
-Submit Complaint
-</button>
+</form>
 
-</div>
-
-</div>
-
-
-<script>
-
-function toggleMode(){
-
-document.body.classList.toggle("light")
-
-if(document.body.classList.contains("light")){
-
-localStorage.setItem("theme","light")
-
-}else{
-
-localStorage.setItem("theme","dark")
-
-}
-
-}
-
-
-
-
-function detectLocation(){
-
-if(navigator.geolocation){
-
-navigator.geolocation.getCurrentPosition(function(pos){
-
-const lat = pos.coords.latitude
-const lon = pos.coords.longitude
-
-document.getElementById("location").value =
-lat + "," + lon
-
-})
-
-}
-
-}
-
-
-
-async function submitComplaint(){
-
-const title = document.getElementById("title").value
-const description = document.getElementById("description").value
-const location = document.getElementById("location").value
-const file = document.getElementById("file").files[0]
-
-if(!title || !description){
-
-alert("Please fill all required fields")
-
-return
-
-}
-
-const formData = new FormData()
-
-formData.append("title",title)
-formData.append("description",description)
-formData.append("location",location)
-
-if(file){
-
-formData.append("file",file)
-
-}
-
-try{
-
-const res = await fetch("http://localhost:5000/api/complaints",{
-
-method:"POST",
-body:formData
-
-})
-
-const data = await res.json()
-
-alert("Complaint Submitted Successfully")
-
-window.location.href="dashboard.html"
-
-}catch(err){
-
-alert("Error submitting complaint")
-
-}
-
-}
-
-</script>
-<script src="js/app.js"></script>
 <script src="js/submit.js"></script>
-</body>
 
+
+</body>
 </html>
