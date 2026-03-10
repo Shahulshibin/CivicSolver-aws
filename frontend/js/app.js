@@ -155,3 +155,29 @@ container.appendChild(card)
 })
 
 }
+document.getElementById("complaintForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const title = document.getElementById("title").value;
+  const description = document.getElementById("description").value;
+  const location = document.getElementById("location").value;
+
+  const response = await fetch("/complaint", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ title, description, location })
+  });
+
+  const result = await response.text();
+  alert(result);
+});
+navigator.geolocation.getCurrentPosition(function(position) {
+
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  document.getElementById("location").value = lat + "," + lon;
+
+});
