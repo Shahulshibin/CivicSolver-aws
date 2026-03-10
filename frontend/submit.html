@@ -1,242 +1,120 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <title>Report Issue</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-
-body{
-background: radial-gradient(circle at top,#1a0033,#000);
-color:white;
-font-family:sans-serif;
-}
-
-.form-card{
-background:rgba(255,255,255,0.04);
-border:1px solid rgba(255,255,255,0.08);
-backdrop-filter:blur(12px);
-border-radius:16px;
-padding:30px;
-max-width:550px;
-margin:auto;
-margin-top:80px;
-}
-
-.input{
-width:100%;
-padding:12px;
-border-radius:8px;
-background:#111;
-border:1px solid #333;
-margin-top:10px;
-}
-
-.input:focus{
-outline:none;
-border-color:#9333ea;
-}
-
-.btn{
-background:#7c3aed;
-padding:12px;
-border-radius:8px;
-width:100%;
-margin-top:20px;
-transition:0.3s;
-}
-
-.btn:hover{
-background:#9333ea;
-box-shadow:0 0 20px #9333ea;
-}
-
-.upload-box{
-border:2px dashed #6d28d9;
-padding:20px;
-text-align:center;
-border-radius:10px;
-margin-top:10px;
-cursor:pointer;
-transition:0.3s;
-}
-
-.upload-box:hover{
-background:#2a004a;
-}
-
-.preview{
-margin-top:10px;
-max-height:200px;
-border-radius:8px;
-}
-
-.location-btn{
-margin-top:10px;
-background:#4c1d95;
-padding:10px;
-border-radius:8px;
-}
-
-.location-btn:hover{
-background:#6d28d9;
-}
-.navlink{
-transition:0.3s;
-padding:6px 12px;
-border-radius:6px;
-}
-
-.navlink:hover{
-color:#c084fc;
-background:rgba(139,92,246,0.1);
-box-shadow:0 0 10px #8b5cf6;
-}
-
-</style>
+<link rel="stylesheet" href="css/style.css">
 
 </head>
 
 <body>
-    <!-- NAVBAR -->
 
-<nav class="flex justify-between items-center px-8 py-4 border-b border-gray-800">
+<header class="navbar">
 
-<h1 class="text-xl font-bold text-violet-400">
-<a href="index.html">CivicTrack</a>
-</h1>
+<div class="logo">CivicTrack</div>
 
-<div class="space-x-6">
+<header class="navbar">
 
-<a href="index.html" class="navlink">Home</a>
 
-<a href="submit.html" class="navlink">Report Issue</a>
 
-<a href="dashboard.html" class="navlink">Dashboard</a>
-<button onclick="history.back()" 
-class="ml-6 mt-4 text-violet-400 hover:text-violet-200">
+<nav>
 
-← Back
+<a href="index.html">Home</a>
+<a href="submit.html">Report Issue</a>
+<a href="dashboard.html">Dashboard</a>
+
+<button onclick="toggleMode()" class="mode-toggle">
+🌙
 
 </button>
-
-</div>
 
 </nav>
 
+</header>
+
+</header>
+
+
+<div class="form-wrapper">
+
 <div class="form-card">
 
-<h2 class="text-3xl text-center text-violet-400 font-bold mb-6">
-Report Civic Issue
-</h2>
+<h2>Report Civic Issue</h2>
 
-<input id="title" class="input" placeholder="Complaint Title">
+<br>
 
-<textarea id="description" class="input" placeholder="Describe the issue"></textarea>
+<label>Issue Title</label>
+<input id="title" placeholder="Example: Broken streetlight">
 
-<input id="location" class="input" placeholder="Location">
+<br><br>
 
-<button onclick="getLocation()" class="location-btn">
-📍 Detect My Location
+<label>Description</label>
+<textarea id="description" rows="4"
+placeholder="Describe the problem"></textarea>
+
+<br><br>
+
+<label>Location</label>
+
+<div class="location-row">
+
+<input id="location" placeholder="City or coordinates">
+
+<button onclick="detectLocation()" class="secondary-btn">
+Detect
 </button>
-
-<!-- Upload Box -->
-
-<div class="upload-box" onclick="document.getElementById('file').click()">
-
-<p>📷 Upload Image or Video</p>
-
-<input type="file" id="file" hidden accept="image/*,video/*" onchange="previewFile()">
 
 </div>
 
-<div id="previewArea"></div>
+<br><br>
 
-<button onclick="submitComplaint()" class="btn">
+<label>Upload Image / Video</label>
+<input type="file" id="file">
+
+<br><br>
+
+<button onclick="submitComplaint()" class="primary-btn submit-btn">
 Submit Complaint
 </button>
 
 </div>
 
+</div>
+
+
 <script>
 
-let uploadedFile=null
+function toggleMode(){
 
-function previewFile(){
+document.body.classList.toggle("light")
 
-const file=document.getElementById("file").files[0]
+if(document.body.classList.contains("light")){
 
-uploadedFile=file
+localStorage.setItem("theme","light")
 
-const preview=document.getElementById("previewArea")
+}else{
 
-preview.innerHTML=""
-
-if(file.type.startsWith("image")){
-
-const img=document.createElement("img")
-
-img.src=URL.createObjectURL(file)
-
-img.className="preview"
-
-preview.appendChild(img)
-
-}
-
-else if(file.type.startsWith("video")){
-
-const video=document.createElement("video")
-
-video.src=URL.createObjectURL(file)
-
-video.controls=true
-
-video.className="preview"
-
-preview.appendChild(video)
+localStorage.setItem("theme","dark")
 
 }
 
 }
 
-async function submitComplaint(){
 
-const title=document.getElementById("title").value
-const description=document.getElementById("description").value
-const location=document.getElementById("location").value
 
-const formData=new FormData()
 
-formData.append("title",title)
-formData.append("description",description)
-formData.append("location",location)
-
-if(uploadedFile){
-formData.append("file",uploadedFile)
-}
-
-await fetch("http://localhost:5000/api/complaints",{
-method:"POST",
-body:formData
-})
-
-alert("Complaint Submitted Successfully")
-
-}
-
-function getLocation(){
+function detectLocation(){
 
 if(navigator.geolocation){
 
-navigator.geolocation.getCurrentPosition(position=>{
+navigator.geolocation.getCurrentPosition(function(pos){
 
-const lat=position.coords.latitude
-const lon=position.coords.longitude
+const lat = pos.coords.latitude
+const lon = pos.coords.longitude
 
-document.getElementById("location").value=
+document.getElementById("location").value =
 lat + "," + lon
 
 })
@@ -245,7 +123,60 @@ lat + "," + lon
 
 }
 
-</script>
 
+
+async function submitComplaint(){
+
+const title = document.getElementById("title").value
+const description = document.getElementById("description").value
+const location = document.getElementById("location").value
+const file = document.getElementById("file").files[0]
+
+if(!title || !description){
+
+alert("Please fill all required fields")
+
+return
+
+}
+
+const formData = new FormData()
+
+formData.append("title",title)
+formData.append("description",description)
+formData.append("location",location)
+
+if(file){
+
+formData.append("file",file)
+
+}
+
+try{
+
+const res = await fetch("http://localhost:5000/api/complaints",{
+
+method:"POST",
+body:formData
+
+})
+
+const data = await res.json()
+
+alert("Complaint Submitted Successfully")
+
+window.location.href="dashboard.html"
+
+}catch(err){
+
+alert("Error submitting complaint")
+
+}
+
+}
+
+</script>
+<script src="js/app.js"></script>
 </body>
+
 </html>

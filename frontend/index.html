@@ -1,69 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>CivicTrack</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-
-body{
-background: radial-gradient(circle at top,#1a0033,#000);
-color:white;
-font-family: 'Segoe UI', sans-serif;
-}
-
-.glow{
-box-shadow:0 0 20px #8b5cf6;
-}
-
-.navlink{
-transition:0.3s;
-}
-
-.navlink:hover{
-color:#a855f7;
-}
-
-.card{
-background:rgba(255,255,255,0.04);
-border:1px solid rgba(255,255,255,0.05);
-backdrop-filter:blur(10px);
-transition:0.4s;
-border-radius:16px;
-}
-
-.card:hover{
-transform:translateY(-10px);
-box-shadow:0 0 30px #7c3aed;
-}
-
-.btn{
-background:#7c3aed;
-padding:12px 24px;
-border-radius:8px;
-transition:0.3s;
-}
-
-.btn:hover{
-background:#9333ea;
-box-shadow:0 0 20px #9333ea;
-transform:scale(1.05);
-}
-.navlink{
-transition:0.3s;
-padding:6px 12px;
-border-radius:6px;
-}
-
-.navlink:hover{
-color:#c084fc;
-background:rgba(139,92,246,0.1);
-box-shadow:0 0 10px #8b5cf6;
-}
-
-</style>
+<link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -71,100 +16,164 @@ box-shadow:0 0 10px #8b5cf6;
 
 <!-- NAVBAR -->
 
-<nav class="flex justify-between items-center px-8 py-4 border-b border-gray-800">
+<header class="navbar">
 
-<h1 class="text-xl font-bold text-violet-400">
-<a href="index.html">CivicTrack</a>
-</h1>
+<div class="logo">CivicTrack</div>
 
-<div class="space-x-6">
+<nav>
 
-<a href="index.html" class="navlink">Home</a>
+<a href="index.html">Home</a>
+<a href="submit.html">Report</a>
+<a href="dashboard.html">Dashboard</a>
 
-<a href="submit.html" class="navlink">Report Issue</a>
-
-<a href="dashboard.html" class="navlink">Dashboard</a>
-
-</div>
+<button class="mode-toggle" onclick="toggleMode()">🌙</button>
 
 </nav>
 
-<!-- HERO -->
+</header>
 
-<section class="text-center mt-28 px-6">
 
-<h2 class="text-6xl font-bold leading-tight">
+<!-- HERO SECTION -->
 
-Smart Civic Issue  
-<span class="text-violet-400">Reporting Platform</span>
+<section class="hero">
 
-</h2>
+<div class="hero-text">
 
-<p class="text-gray-400 mt-6 text-lg max-w-xl mx-auto">
+<h1>
+Smart <span>Civic Issue</span> Reporting Platform
+</h1>
 
-CivicTrack helps citizens report community problems quickly and enables authorities to resolve issues efficiently using cloud technology.
-
+<p>
+Report problems in your city and track their resolution in real time.
 </p>
 
-<div class="mt-10 space-x-4">
+<div class="hero-buttons">
 
-<a href="submit.html" class="btn glow">
-Report Complaint
+<a href="submit.html">
+<button class="primary-btn">Report Issue</button>
 </a>
 
-<a href="dashboard.html" class="border border-violet-500 px-6 py-3 rounded-lg hover:bg-violet-500 transition">
-View Dashboard
+<a href="dashboard.html">
+<button class="secondary-btn">View Dashboard</button>
 </a>
 
 </div>
 
+</div>
+
+<div class="hero-graphic">
+
+<div class="floating-circle"></div>
+<div class="floating-circle small"></div>
+<div class="floating-circle big"></div>
+
+</div>
+
 </section>
+
 
 <!-- FEATURES -->
 
-<section class="grid md:grid-cols-3 gap-10 px-16 mt-32">
+<section class="features">
 
-<div class="card p-8">
+<h2>Platform Features</h2>
 
-<h3 class="text-xl text-violet-400 font-semibold mb-3">
-📍 Report Issues
-</h3>
+<div class="feature-grid">
 
-<p class="text-gray-400">
-Submit complaints about potholes, garbage, broken streetlights and infrastructure problems.
+<div class="feature-card">
+
+<h3>📍 Report Issues</h3>
+
+<p>
+Report potholes, garbage, broken streetlights and other problems easily.
 </p>
 
 </div>
 
-<div class="card p-8">
 
-<h3 class="text-xl text-violet-400 font-semibold mb-3">
-📊 Track Complaints
-</h3>
+<div class="feature-card">
 
-<p class="text-gray-400">
-Monitor complaint progress in real time with status updates.
+<h3>📊 Track Complaints</h3>
+
+<p>
+Monitor complaint progress and resolution status.
 </p>
 
 </div>
 
-<div class="card p-8">
 
-<h3 class="text-xl text-violet-400 font-semibold mb-3">
-☁ Cloud Infrastructure
-</h3>
+<div class="feature-card">
 
-<p class="text-gray-400">
-Powered by AWS cloud for high scalability and reliability.
+<h3>☁ Cloud Ready</h3>
+
+<p>
+Built with scalable cloud-native architecture.
 </p>
+
+</div>
+
+
+<div class="feature-card">
+
+<h3>📷 Media Upload</h3>
+
+<p>
+Upload photos or videos to support your complaint.
+</p>
+
+</div>
 
 </div>
 
 </section>
 
+
+<!-- STATS -->
+
+<section class="stats">
+
+<div class="stat-card">
+
+<h3>120+</h3>
+<p>Complaints Reported</p>
+
+</div>
+
+<div class="stat-card">
+
+<h3>85+</h3>
+<p>Issues Resolved</p>
+
+</div>
+
+<div class="stat-card">
+
+<h3>10+</h3>
+<p>Communities Using</p>
+
+</div>
+
+</section>
+
+
+<!-- MAP SECTION -->
+
+<section class="map-section">
+
+<h2>Community Issue Map</h2>
+
+<div class="map-placeholder">
+
+🗺️ Map integration coming soon
+
+</div>
+
+</section>
+
+
 <!-- FOOTER -->
 
-<footer class="text-center mt-32 pb-10 text-gray-500">
+<footer>
 
 <p>
 © 2026 CivicTrack — Cloud Native Civic Platform
@@ -172,5 +181,9 @@ Powered by AWS cloud for high scalability and reliability.
 
 </footer>
 
+
+<script src="js/app.js"></script>
+
 </body>
+
 </html>

@@ -1,151 +1,119 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Dashboard</title>
+<title>CivicTrack Dashboard</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-
-body{
-background:radial-gradient(circle at top,#1a0033,#000);
-color:white;
-}
-
-.card{
-background:rgba(255,255,255,0.04);
-border-radius:16px;
-padding:20px;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-6px);
-box-shadow:0 0 25px #7c3aed;
-}
-.navlink{
-transition:0.3s;
-padding:6px 12px;
-border-radius:6px;
-}
-
-.navlink:hover{
-color:#c084fc;
-background:rgba(139,92,246,0.1);
-box-shadow:0 0 10px #8b5cf6;
-}
-.navlink{
-transition:0.3s;
-padding:6px 12px;
-border-radius:6px;
-}
-
-.navlink:hover{
-color:#c084fc;
-background:rgba(139,92,246,0.1);
-box-shadow:0 0 10px #8b5cf6;
-}
-</style>
+<link rel="stylesheet" href="css/style.css">
 
 </head>
 
 <body>
-    <!-- NAVBAR -->
 
-<nav class="flex justify-between items-center px-8 py-4 border-b border-gray-800">
+<header class="navbar">
 
-<h1 class="text-xl font-bold text-violet-400">
-<a href="index.html">CivicTrack</a>
-</h1>
+<div class="logo">CivicTrack</div>
 
-<div class="space-x-6">
+<header class="navbar">
 
-<a href="index.html" class="navlink">Home</a>
 
-<a href="submit.html" class="navlink">Report Issue</a>
+<nav>
 
-<a href="dashboard.html" class="navlink">Dashboard</a>
-<button onclick="history.back()" 
-class="ml-6 mt-4 text-violet-400 hover:text-violet-200">
+<a href="index.html">Home</a>
+<a href="submit.html">Report Issue</a>
+<a href="dashboard.html">Dashboard</a>
 
-← Back
-
+<button onclick="toggleMode()" class="mode-toggle">
+🌙
 </button>
-</div>
 
 </nav>
 
-<h1 class="text-4xl text-center mt-10 text-violet-400 font-bold">
-Complaint Dashboard
-</h1>
+</header>
 
-<div id="complaints" class="grid md:grid-cols-3 gap-6 p-12">
+</header>
 
-<div class="text-center text-gray-400 col-span-3">
 
-<p>No complaints yet</p>
+<section class="dashboard">
 
-<p class="text-sm mt-2">
-Submit a complaint to see it appear here.
-</p>
+<h2>Community Complaint Dashboard</h2>
 
+<br>
+
+<div class="stats">
+
+<div class="stat-card">
+<h3 id="totalCount">0</h3>
+<p>Total Complaints</p>
+</div>
+
+<div class="stat-card">
+<h3 id="pendingCount">0</h3>
+<p>Pending</p>
+</div>
+
+<div class="stat-card">
+<h3 id="resolvedCount">0</h3>
+<p>Resolved</p>
 </div>
 
 </div>
+
+
+<br>
+
+
+<input
+type="text"
+id="search"
+placeholder="Search complaints..."
+class="search-bar"
+onkeyup="searchComplaints()">
+
+
+<br><br>
+
+
+<div id="complaints" class="grid"></div>
+
+</section>
+
 
 <script>
+    const btn = document.getElementById("modeBtn")
+
+function toggleMode(){
+
+document.body.classList.toggle("light")
+
+if(document.body.classList.contains("light")){
+btn.innerHTML="☀"
+localStorage.setItem("theme","light")
+}else{
+btn.innerHTML="🌙"
+localStorage.setItem("theme","dark")
+}
+
+}
+
+
+let allComplaints = []
+
 
 async function loadComplaints(){
 
 try{
 
-const res=await fetch("http://localhost:5000/api/complaints")
+const res = await fetch("http://localhost:5000/api/complaints")
 
-const data=await res.json()
+const data = await res.json()
 
-const container=document.getElementById("complaints")
+allComplaints = data
 
-container.innerHTML=""
+updateStats(data)
 
-if(data.length===0){
-
-container.innerHTML=`
-<div class="text-center text-gray-400 col-span-3">
-No complaints found
-</div>
-`
-
-return
-}
-
-data.forEach(c=>{
-
-container.innerHTML+=`
-
-<div class="card">
-
-<h3 class="text-xl text-violet-400 mb-2">
-${c.title}
-</h3>
-
-<p class="text-gray-300">
-${c.description}
-</p>
-
-<p class="text-sm text-gray-500 mt-2">
-${c.location}
-</p>
-
-<span class="text-green-400 text-sm">
-${c.status}
-</span>
-
-</div>
-
-`
-
-})
+renderComplaints(data)
 
 }catch(err){
 
@@ -155,9 +123,103 @@ console.log(err)
 
 }
 
+
+
+function updateStats(data){
+
+let total = data.length
+let pending = data.filter(c => c.status === "Pending").length
+let resolved = data.filter(c => c.status === "Resolved").length
+
+document.getElementById("totalCount").innerText = total
+document.getElementById("pendingCount").innerText = pending
+document.getElementById("resolvedCount").innerText = resolved
+
+}
+
+
+
+function renderComplaints(list){
+
+const container = document.getElementById("complaints")
+
+container.innerHTML = ""
+
+if(list.length === 0){
+
+container.innerHTML = `
+<div class="no-data">
+
+<h3>No complaints yet</h3>
+
+<a href="submit.html">
+<button class="primary-btn">Report Complaint</button>
+</a>
+
+</div>
+`
+
+return
+
+}
+
+
+list.forEach(c=>{
+
+const statusColor = c.status === "Resolved"
+? "status-resolved"
+: "status-pending"
+
+const card = document.createElement("div")
+
+card.className = "complaint-card"
+
+card.innerHTML = `
+
+<h3>${c.title}</h3>
+
+<p>${c.description}</p>
+
+<p><b>Location:</b> ${c.location}</p>
+
+<span class="status ${statusColor}">
+${c.status}
+</span>
+
+${c.media ? `<img src="http://localhost:5000/uploads/${c.media}">` : ""}
+
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+
+
+function searchComplaints(){
+
+const keyword = document.getElementById("search").value.toLowerCase()
+
+const filtered = allComplaints.filter(c =>
+
+c.title.toLowerCase().includes(keyword) ||
+c.description.toLowerCase().includes(keyword) ||
+c.location.toLowerCase().includes(keyword)
+
+)
+
+renderComplaints(filtered)
+
+}
+
+
+
 loadComplaints()
 
 </script>
-
+<script src="js/app.js"></script>
 </body>
+
 </html>
